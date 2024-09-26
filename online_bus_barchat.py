@@ -53,6 +53,17 @@ def main():
                         # Convert the 'Price' column to numeric in case it's not
                         data['Price'] = pd.to_numeric(data['Price'], errors='coerce')
 
+                        # Sidebar - Filter by Star_Rating and Bus_Type (Moved section)
+                        st.sidebar.write('### Filters')
+                        
+                        # Filter by Star_Rating
+                        star_ratings = data['Star_Rating'].unique().tolist()
+                        selected_ratings = st.sidebar.multiselect('Filter by Star Rating', star_ratings)
+
+                        # Filter by Bus_Type
+                        bus_types = data['Bus_Type'].unique().tolist()
+                        selected_bus_types = st.sidebar.multiselect('Filter by Bus Type', bus_types)
+
                         # Display data table with a subheader
                         st.write(f"### Data for Route: {selected_route}")
                         st.write(data)
@@ -60,18 +71,10 @@ def main():
                         # Bar Chart Visualization - Price by Bus Type (before filtering)
                         st.write("### Price by Bus Type (Before Filtering)")
                         if not data.empty:
-                            # Convert the 'Price' column to numeric in case it's not
-                            data['Price'] = pd.to_numeric(data['Price'], errors='coerce')
                             price_by_bus_type = data.groupby('Bus_Type')['Price'].mean()
                             st.bar_chart(price_by_bus_type)
 
-                        # Filter by Star_Rating and Bus_Type
-                        star_ratings = data['Star_Rating'].unique().tolist()
-                        selected_ratings = st.multiselect('Filter by Star Rating', star_ratings)
-
-                        bus_types = data['Bus_Type'].unique().tolist()
-                        selected_bus_types = st.multiselect('Filter by Bus Type', bus_types)
-
+                        # Apply filters and display filtered data
                         if selected_ratings and selected_bus_types:
                             filtered_data = filter_data(data, selected_ratings, selected_bus_types)
                             # Display filtered data table with a subheader
